@@ -281,7 +281,7 @@ switch (ENVIRONMENT)
 	}
 
 	define('VIEWPATH', $view_folder);
-	ini_set('error_reporting', E_STRICT);
+	//ini_set('error_reporting', E_STRICT);
 
 /*
  * --------------------------------------------------------------------

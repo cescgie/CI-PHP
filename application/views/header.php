@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 
-<title>SIMPLE CRUD APPLICATION</title>
+<title><?= $data['title']; ?></title>
 
 <link href="<?php echo base_url(); ?>res/css/style.css" rel="stylesheet" type="text/css" />
 
