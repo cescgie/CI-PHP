@@ -1,7 +1,7 @@
 <?php
 class File_model extends CI_Model {
 	
-	private $tbl= 'cf';
+	private $tbl_cf= 'cf';
 	
 	function __construct(){
 		parent::__construct();
@@ -17,6 +17,10 @@ class File_model extends CI_Model {
          ->from('cf')
          ->get()
          ->result();
+	}
+	function insert_cf($datas){
+		return $this->db->insert($this->tbl_cf, $datas);
+		//return $this->db->insert_id();
 	}
 }
 ?>
