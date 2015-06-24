@@ -55,6 +55,7 @@ class Person extends CI_Controller {
         // load view
         $this->load->view('header',$data);
         $this->load->view('personList', $data);
+        //$this->load->view('footer',$data);
     }
     
     function add()
