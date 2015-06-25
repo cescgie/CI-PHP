@@ -4,6 +4,7 @@ class File_model extends CI_Model {
 	private $tbl_cf= 'cf';
 	private $tbl_ga= 'ga';
 	private $tbl_gl= 'gl';
+	private $tbl_ir= 'ir';
 	
 	function __construct(){
 		parent::__construct();
@@ -40,8 +41,20 @@ class File_model extends CI_Model {
          ->get()
          ->result();
 	}
+
 	function insert_gl($datas){
 		return $this->db->insert($this->tbl_gl, $datas);
+	}
+
+	function count_ir(){
+		return $this->db->select('count(*) as sum_ir',false)
+         ->from('ir')
+         ->get()
+         ->result();
+	}
+
+	function insert_ir($datas){
+		return $this->db->insert($this->tbl_ir, $datas);
 	}
 }
 ?>

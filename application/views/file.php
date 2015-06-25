@@ -33,7 +33,7 @@
       '</div> <!-- panel panel-default -->'; 
   } 
 
-  //GA Information
+  //GL Information
   if (!sizeof($data['sum_gl'])) {
       echo 
       '<div class="alert alert-info">No GL Data.</div>';
@@ -49,4 +49,21 @@
       echo
       '</div> <!-- panel panel-default -->'; 
   } 
+
+  //IR Information
+  if (!sizeof($data['sum_ir'])) {
+      echo 
+      '<div class="alert alert-info">No IR Data.</div>';
+  }else{
+      echo
+      '<div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">IR</div>';
+          foreach ($data['sum_ir'] as $sum){
+             echo 
+            '<p>'.$sum->sum_ir. ' Records</p>';
+          }
+      echo
+      '</div> <!-- panel panel-default -->'; 
+  }
   ?>
