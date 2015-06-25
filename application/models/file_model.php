@@ -5,6 +5,7 @@ class File_model extends CI_Model {
 	private $tbl_ga= 'ga';
 	private $tbl_gl= 'gl';
 	private $tbl_ir= 'ir';
+	private $tbl_kv= 'kv';
 	
 	function __construct(){
 		parent::__construct();
@@ -55,6 +56,18 @@ class File_model extends CI_Model {
 
 	function insert_ir($datas){
 		return $this->db->insert($this->tbl_ir, $datas);
+	}
+
+
+	function count_kv(){
+		return $this->db->select('count(*) as sum_kv',false)
+         ->from('kv')
+         ->get()
+         ->result();
+	}
+
+	function insert_kv($datas){
+		return $this->db->insert($this->tbl_kv, $datas);
 	}
 }
 ?>
