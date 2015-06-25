@@ -100,4 +100,21 @@
       echo
       '</div> <!-- panel panel-default -->'; 
   }
+
+  //TC Information
+  if (!sizeof($data['sum_tc'])) {
+      echo 
+      '<div class="alert alert-info">No TC Data.</div>';
+  }else{
+      echo
+      '<div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">TC</div>';
+          foreach ($data['sum_tc'] as $sum){
+             echo 
+            '<p>'.$sum->sum_tc. ' Records</p>';
+          }
+      echo
+      '</div> <!-- panel panel-default -->'; 
+  }
   ?>

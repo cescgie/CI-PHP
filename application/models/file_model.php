@@ -7,6 +7,7 @@ class File_model extends CI_Model {
 	private $tbl_ir= 'ir';
 	private $tbl_kv= 'kv';
 	private $tbl_kw= 'kw';
+	private $tbl_tc= 'tc';
 	
 	function __construct(){
 		parent::__construct();
@@ -79,6 +80,17 @@ class File_model extends CI_Model {
 
 	function insert_kw($datas){
 		return $this->db->insert($this->tbl_kw, $datas);
+	}
+
+	function count_tc(){
+		return $this->db->select('count(*) as sum_tc',false)
+         ->from('tc')
+         ->get()
+         ->result();
+	}
+
+	function insert_tc($datas){
+		return $this->db->insert($this->tbl_tc, $datas);
 	}
 }
 ?>
