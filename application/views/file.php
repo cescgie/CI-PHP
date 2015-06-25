@@ -32,4 +32,21 @@
       echo
       '</div> <!-- panel panel-default -->'; 
   } 
+
+  //GA Information
+  if (!sizeof($data['sum_gl'])) {
+      echo 
+      '<div class="alert alert-info">No GL Data.</div>';
+  }else{
+      echo
+      '<div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">GL</div>';
+          foreach ($data['sum_gl'] as $sum){
+             echo 
+            '<p>'.$sum->sum_gl. ' Records</p>';
+          }
+      echo
+      '</div> <!-- panel panel-default -->'; 
+  } 
   ?>

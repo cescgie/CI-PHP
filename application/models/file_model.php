@@ -3,6 +3,7 @@ class File_model extends CI_Model {
 	
 	private $tbl_cf= 'cf';
 	private $tbl_ga= 'ga';
+	private $tbl_gl= 'gl';
 	
 	function __construct(){
 		parent::__construct();
@@ -21,7 +22,6 @@ class File_model extends CI_Model {
 	}
 	function insert_cf($datas){
 		return $this->db->insert($this->tbl_cf, $datas);
-		//return $this->db->insert_id();
 	}
 
 	function count_ga(){
@@ -32,7 +32,16 @@ class File_model extends CI_Model {
 	}
 	function insert_ga($datas){
 		return $this->db->insert($this->tbl_ga, $datas);
-		//return $this->db->insert_id();
+	}
+
+	function count_gl(){
+		return $this->db->select('count(*) as sum_gl',false)
+         ->from('gl')
+         ->get()
+         ->result();
+	}
+	function insert_gl($datas){
+		return $this->db->insert($this->tbl_gl, $datas);
 	}
 }
 ?>
