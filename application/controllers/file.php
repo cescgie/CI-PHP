@@ -18,9 +18,25 @@ class File extends CI_Controller {
     
     public function index()
     {
-        $data['title'] = "Title";
-        $data['sub_title'] ="Sub Title";
-        $this->all_connection();
+        /*
+        *This will be used as page title.
+        */
+        $data['title'] = 'Adserverdaten';
+
+        /*
+        *Start execute time
+        */
+        $time_start = microtime(true);
+
+        /*
+        *As long as admin login, connect app to server file, download files, convert,
+        *and parse them into to database.
+        */
+        //$this->all_connection();
+
+        /*
+        *Query for intialize records in database.
+        */
         $data['sum_cf'] = $this->File_model->count_cf();
         $data['sum_ga'] = $this->File_model->count_ga();
         $data['sum_gl'] = $this->File_model->count_gl();
@@ -28,21 +44,61 @@ class File extends CI_Controller {
         $data['sum_kv'] = $this->File_model->count_kv();
         $data['sum_kw'] = $this->File_model->count_kw();
         $data['sum_tc'] = $this->File_model->count_tc();
+
+        $_SESSION["refresh-time"] = '30';
+        /*
+        *Call all views that will be show as index 
+        */
         $this->load->view('header',array('data' => $data));
         $this->load->view('file',array('data' => $data));
+
+        /*
+        *End execute time
+        */
+        $time_end = microtime(true);
+        
+        /*
+        *Parameter $time has value executed time from parsing and query.
+        */
+        $time = $time_end - $time_start;
+        echo 'SESSION_'.$_SESSION["refresh-time"];
+        
+        /*
+        *Set refresh-time As Session.
+        *This Session will be used in header.php
+        */
+        $this->set_session($time);
+        //Session::set('refresh-time','30');
     }
+
+    public function set_session($time){
+      /*
+      *if executed time longer than 60 seconds/ 1 minutes, 
+      *the next refresh-time will be 30 seconds,
+      *else will be set up as 600 seconds/ 10 minutes.
+      */
+      if($time>60){
+        unset($_SESSION["refresh-time"]);
+        $_SESSION["refresh-time"] = "10";
+      }else{
+        unset($_SESSION["refresh-time"]);
+        $_SESSION["refresh-time"] = "600";
+      }
+    }
+
 
     public function all_connection(){
       /*
       *Connect to each server file
       */
-      //$this->connect('cf');
-      //$this->connect('ga');
-      //$this->connect('gl');
-      //$this->connect('ir');
-      //$this->connect('kv');
-      //$this->connect('kw');
-      $this->connect('tc');
+      $this->connect('cf');
+      $this->connect('ga');
+      $this->connect('gl');
+      $this->connect('ir');
+      $this->connect('kv');
+      $this->connect('kw');
+      //$this->connect('tc');
+      $this->connect('ga');
     }
 
     public function get_web_page( $url )

@@ -1,19 +1,14 @@
-	<?php 
+
+  <?php 
   //CA Information
   if (!sizeof($data['sum_cf'])) {
       echo 
       '<div class="alert alert-info">No CF Data.</div>';
   }else{
-      echo
-      '<div class="panel panel-default">
-          <!-- Default panel contents -->
-          <div class="panel-heading">CF</div>';
           foreach ($data['sum_cf'] as $sum){
              echo 
-            '<p>'.$sum->sum_cf. ' Records</p>';
+            '<p>CF : '.$sum->sum_cf. ' Einträge</p>';
           }
-      echo
-      '</div> <!-- panel panel-default -->'; 
   } 
 
   //GA Information
@@ -21,16 +16,10 @@
       echo 
       '<div class="alert alert-info">No GA Data.</div>';
   }else{
-      echo
-      '<div class="panel panel-default">
-          <!-- Default panel contents -->
-          <div class="panel-heading">GA</div>';
           foreach ($data['sum_ga'] as $sum){
              echo 
-            '<p>'.$sum->sum_ga. ' Records</p>';
+            '<p>GA : '.$sum->sum_ga. ' Einträge</p>';
           }
-      echo
-      '</div> <!-- panel panel-default -->'; 
   } 
 
   //GL Information
@@ -38,16 +27,10 @@
       echo 
       '<div class="alert alert-info">No GL Data.</div>';
   }else{
-      echo
-      '<div class="panel panel-default">
-          <!-- Default panel contents -->
-          <div class="panel-heading">GL</div>';
           foreach ($data['sum_gl'] as $sum){
              echo 
-            '<p>'.$sum->sum_gl. ' Records</p>';
+            '<p>GL : '.$sum->sum_gl. ' Einträge</p>';
           }
-      echo
-      '</div> <!-- panel panel-default -->'; 
   } 
 
   //IR Information
@@ -55,16 +38,10 @@
       echo 
       '<div class="alert alert-info">No IR Data.</div>';
   }else{
-      echo
-      '<div class="panel panel-default">
-          <!-- Default panel contents -->
-          <div class="panel-heading">IR</div>';
           foreach ($data['sum_ir'] as $sum){
              echo 
-            '<p>'.$sum->sum_ir. ' Records</p>';
+            '<p>IR : '.$sum->sum_ir. ' Einträge</p>';
           }
-      echo
-      '</div> <!-- panel panel-default -->'; 
   }
 
   //KV Information
@@ -72,16 +49,10 @@
       echo 
       '<div class="alert alert-info">No KV Data.</div>';
   }else{
-      echo
-      '<div class="panel panel-default">
-          <!-- Default panel contents -->
-          <div class="panel-heading">KV</div>';
           foreach ($data['sum_kv'] as $sum){
              echo 
-            '<p>'.$sum->sum_kv. ' Records</p>';
+            '<p>KV : '.$sum->sum_kv. ' Einträge</p>';
           }
-      echo
-      '</div> <!-- panel panel-default -->'; 
   }
 
   //KW Information
@@ -89,16 +60,10 @@
       echo 
       '<div class="alert alert-info">No KW Data.</div>';
   }else{
-      echo
-      '<div class="panel panel-default">
-          <!-- Default panel contents -->
-          <div class="panel-heading">KV</div>';
           foreach ($data['sum_kw'] as $sum){
              echo 
-            '<p>'.$sum->sum_kw. ' Records</p>';
+            '<p>KW : '.$sum->sum_kw. ' Einträge</p>';
           }
-      echo
-      '</div> <!-- panel panel-default -->'; 
   }
 
   //TC Information
@@ -106,15 +71,11 @@
       echo 
       '<div class="alert alert-info">No TC Data.</div>';
   }else{
-      echo
-      '<div class="panel panel-default">
-          <!-- Default panel contents -->
-          <div class="panel-heading">TC</div>';
           foreach ($data['sum_tc'] as $sum){
              echo 
-            '<p>'.$sum->sum_tc. ' Records</p>';
+            '<p>TC : '.$sum->sum_tc. ' Einträge</p>';
           }
-      echo
-      '</div> <!-- panel panel-default -->'; 
   }
   ?>
+  </body>
+</html>
