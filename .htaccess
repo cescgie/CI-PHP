@@ -1,6 +1,6 @@
 Options -Indexes
 
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-d
+RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ /CH-PHP/index.php?url=$1 [QSA,L]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule .* index.php/$0 [PT,L]

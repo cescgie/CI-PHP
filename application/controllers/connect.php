@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class File extends CI_Controller {
+class Connect extends CI_Controller {
 
     function __construct()
     {
@@ -13,96 +13,62 @@ class File extends CI_Controller {
         $this->load->helper('url');
         
         // load model
-        $this->load->model('File_model','',TRUE);
-    }
-    
-    public function index()
-    {
-        /*
-        *This will be used as page title.
-        */
-        $data['title'] = 'Adserverdaten';
-
-        /*
-        *Start execute time
-        */
-        $time_start = microtime(true);
-
-        /*
-        *As long as admin login, connect app to server file, download files, convert,
-        *and parse them into to database.
-        */
-        //$this->all_connection();
-
-        /*
-        *Query for intialize records in database.
-        */
-        $data['sum_cf'] = $this->File_model->count_cf();
-        $data['sum_ga'] = $this->File_model->count_ga();
-        $data['sum_gl'] = $this->File_model->count_gl();
-        $data['sum_ir'] = $this->File_model->count_ir();
-        $data['sum_kv'] = $this->File_model->count_kv();
-        $data['sum_kw'] = $this->File_model->count_kw();
-        $data['sum_tc'] = $this->File_model->count_tc();
-
-        //$_SESSION["refresh-time"] = '30';
-        /*
-        *Call all views that will be show as index 
-        */
-        $this->load->view('header',array('data' => $data));
-        $this->load->view('file',array('data' => $data));
-
-        /*
-        *End execute time
-        */
-        $time_end = microtime(true);
-        
-        /*
-        *Parameter $time has value executed time from parsing and query.
-        */
-        $time = $time_end - $time_start;
-        //echo 'SESSION_'.$_SESSION["refresh-time"];
-        
-        /*
-        *Set refresh-time As Session.
-        *This Session will be used in header.php
-        */
-        $this->set_session($time);
-        //Session::set('refresh-time','30');
+        $this->load->model('Connect_model','',TRUE);
     }
 
-    public function set_session($time){
+   public function index() {
+
       /*
-      *if executed time longer than 60 seconds/ 1 minutes, 
-      *the next refresh-time will be 30 seconds,
-      *else will be set up as 600 seconds/ 10 minutes.
+      *As long as admin login, connect app to server file, download files, convert,
+      *and parse them into to database.
       */
-      if($time>60){
-        unset($_SESSION["refresh-time"]);
-        $_SESSION["refresh-time"] = "10";
-      }else{
-        unset($_SESSION["refresh-time"]);
-        $_SESSION["refresh-time"] = "600";
-      }
-    }
+      $this->all_connection();
+      //$this->connects('ga');
+      /*
+      *Query for intialize records in database.
+      */
+      $data['sum_cf'] = $this->Connect_model->count_cf();
+      //ga query
+      $data['sum_ga'] = $this->Connect_model->count_ga();
+      /*$data['all_ip_ga'] = $this->_model->all_ip_ga();
+      $data['ip_ga'] = count($data['all_ip_ga']);
+      $data['all_user_ga'] = $this->_model->all_user_ga();
+      $data['user_ga'] = count($data['all_user_ga']);
+      */
+      $data['sum_gl'] = $this->Connect_model->count_gl();
+      $data['sum_ir'] = $this->Connect_model->count_ir();
+      $data['sum_kv'] = $this->Connect_model->count_kv();
+      $data['sum_kw'] = $this->Connect_model->count_kw();
+      $data['sum_tc'] = $this->Connect_model->count_tc();
 
+      //print_r($data['sum_cf']['0']->sum_cf);
+      $cf = $data['sum_cf']['0']->sum_cf;
+      $ga = $data['sum_ga']['0']->sum_ga;
+      $gl = $data['sum_gl']['0']->sum_gl;
+      $ir = $data['sum_ir']['0']->sum_ir;
+      $kv = $data['sum_kv']['0']->sum_kv;
+      $kw = $data['sum_kw']['0']->sum_kw;
+      $tc = $data['sum_tc']['0']->sum_tc;
+      
+      echo $cf.'-'.$ga.'-'.$gl.'-'.$ir.'-'.$kv.'-'.$kw.'-'.$tc;
+      //echo 'ok';
+   }
 
-    public function all_connection(){
+   public function all_connection(){
       /*
       *Connect to each server file
       */
-      $this->connect('cf');
-      $this->connect('ga');
-      $this->connect('gl');
-      $this->connect('ir');
-      $this->connect('kv');
-      $this->connect('kw');
-      //$this->connect('tc');
-      $this->connect('ga');
-    }
+      $this->connects('cf');
+      $this->connects('gl');
+      $this->connects('ir');
+      $this->connects('kv');
+      $this->connects('kw');
+      $this->connects('tc');
+      //$this->connects('ga');
+   }
 
-    public function get_web_page( $url )
-    {
+   public function get_web_page( $url )
+   {
         $user_agent='Mozilla/5.0 (Windows NT 6.1; rv:8.0) Gecko/20100101 Firefox/8.0';
         $username = ADS_USER;
         $password = ADS_PASS;  
@@ -119,9 +85,9 @@ class File extends CI_Controller {
             CURLOPT_CONNECTTIMEOUT => 0,      // timeout on connect
             CURLOPT_TIMEOUT        => 0,      // timeout on response
             CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
-                CURLOPT_HTTPAUTH       => CURLAUTH_ANY,
-                CURLOPT_USERPWD        => "$username:$password",
-            );
+         		CURLOPT_HTTPAUTH	   => CURLAUTH_ANY,
+  			    CURLOPT_USERPWD		   => "$username:$password",
+		    );
 
         $ch      = curl_init( $url );
         curl_setopt_array( $ch, $options );
@@ -135,32 +101,32 @@ class File extends CI_Controller {
         $header['errmsg']  = $errmsg;
         $header['content'] = $content;
         return $header;
-    }
+	}
 
-    public function convert($file_in)
-    {
-        //This input should be from somewhere else, hard-coded in this example
-        $file_name = $file_in;
-        // Raising this value may increase performance
-        $buffer_size = 4096; // read 4kb at a time
-        $out_file_name = str_replace('.gz', '', $file_name); 
-        // Open our files (in binary mode)
-        $file = gzopen($file_name, 'rb');
-        $out_file = fopen($out_file_name, 'wb'); 
-        // Keep repeating until the end of the input file
-        while(!gzeof($file)) {
-          // Read buffer-size bytes
-          // Both fwrite and gzread and binary-safe
-          fwrite($out_file, gzread($file, $buffer_size));
-        } 
-        // Files are done, close files
-        fclose($out_file);
-        gzclose($file);
-        echo $out_file;
-      }
+  public function convert($file_in)
+  {
+    //This input should be from somewhere else, hard-coded in this example
+    $file_name = $file_in;
+    // Raising this value may increase performance
+    $buffer_size = 4096; // read 4kb at a time
+    $out_file_name = str_replace('.gz', '', $file_name); 
+    // Open our files (in binary mode)
+    $file = gzopen($file_name, 'rb');
+    $out_file = fopen($out_file_name, 'wb'); 
+    // Keep repeating until the end of the input file
+    while(!gzeof($file)) {
+      // Read buffer-size bytes
+      // Both fwrite and gzread and binary-safe
+      fwrite($out_file, gzread($file, $buffer_size));
+    } 
+    // Files are done, close files
+    fclose($out_file);
+    gzclose($file);
+    echo $out_file;
+  }
 
-    public function download_remote_file_with_curl($files_url, $save_to)
-    {
+  public function download_remote_file_with_curl($files_url, $save_to)
+  {
       $username = ADS_USER;
       $password = ADS_PASS;
       $che = curl_init();
@@ -176,127 +142,130 @@ class File extends CI_Controller {
       fwrite($download, $content);
       fclose($download);
       curl_close( $che );
-    }
-    public function connect($table)
-      {
-          //Read a web page and check for errors:
-          $url = "http://sgsdata.adtech.de/59.1/0/".$table."/";
-          $result = $this->get_web_page( $url );
+  }
 
-          if ( $result['errno'] != 0 )
-              Message::set("error: bad url | timeout | redirect loop ...");
+  public function connects($table){
+      //Read a web page and check for errors:
+      $url = "http://sgsdata.adtech.de/59.1/0/".$table."/";
+      $result = $this->get_web_page( $url );
+      //echo $url;
+      if ( $result['errno'] != 0 )
+          Message::set("error: bad url | timeout | redirect loop ...");
 
-          if ( $result['http_code'] != 200 )
-              Message::set("error: no page | no permissions | no service ");
+      if ( $result['http_code'] != 200 )
+          Message::set("error: no page | no permissions | no service ");
 
-          $page = $result['content'];
+      $page = $result['content'];
 
-          if($result==TRUE){  
-              //explode
-              $str = $page;
-              $preg=preg_match_all('#<li><a.*?>(.*?)<\/a></li>#', $str, $parts);
-              if($preg==TRUE){
-                  
-                  //get the highest available array key          
-                  $maxIndex = array_search(max($parts[0]), $parts[0]);
-                  //rename value from $maxIndex. Before : "(1 space)value"
-                  $subValue = substr($parts[1][$maxIndex], 1);
-                  $newurl=$url.$subValue."";
+      if($result==TRUE){  
+          //explode
+          $str = $page;
+          $preg=preg_match_all('#<li><a.*?>(.*?)<\/a></li>#', $str, $parts);
+          if($preg==TRUE){
+              
+              //get the highest available array key          
+              $maxIndex = array_search(max($parts[0]), $parts[0]);
+              //rename value from $maxIndex. Before : "(1 space)value"
+              $subValue = substr($parts[1][$maxIndex], 1);
+              $newurl=$url.$subValue."";
 
-                  $result2 = $this->get_web_page( $newurl );
+              $result2 = $this->get_web_page( $newurl );
 
-                  if ( $result2['errno'] != 0 )
-                      Message::set("error: bad url | timeout | redirect loop ...");
+              if ( $result2['errno'] != 0 )
+                  print_r("error: bad url | timeout | redirect loop ...");
 
-                  if ( $result2['http_code'] != 200 )
-                      Message::set("error: no page | no permissions | no service ");
+              if ( $result2['http_code'] != 200 )
+                  print_r("error: no page | no permissions | no service ");
 
-                  $page2 = $result2['content'];
+              $page2 = $result2['content'];
 
-                  if($result2==TRUE){
-                      $str2 = $page2;
-                      $preg2=preg_match_all('#<li><a.*?>(.*?)<\/a></li>#', $str2, $parts2);
-                      if($preg2==TRUE){
-                          
-                          //get the highest available array key          
-                          $maxIndex2 = array_search(max($parts2[0]), $parts2[0]);
-                          //rename value from $maxIndex. Before : "(1 space)value"
-                          $subValue2 = substr($parts2[1][$maxIndex2], 1);
-                          $newurl2=$newurl.$subValue2."";
-                          $result3 = $this->get_web_page( $newurl2 );
+              if($result2==TRUE){
+                  $str2 = $page2;
+                  $preg2=preg_match_all('#<li><a.*?>(.*?)<\/a></li>#', $str2, $parts2);
+                  if($preg2==TRUE){
+                      
+                      //get the highest available array key          
+                      $maxIndex2 = array_search(max($parts2[0]), $parts2[0]);
+                      //rename value from $maxIndex. Before : "(1 space)value"
+                      $subValue2 = substr($parts2[1][$maxIndex2], 1);
+                      $newurl2=$newurl.$subValue2."";
+                      $result3 = $this->get_web_page( $newurl2 );
 
-                          if ( $result3['errno'] != 0 )
-                              Message::set("error: bad url | timeout | redirect loop ...");
+                      if ( $result3['errno'] != 0 )
+                          print_r("error: bad url | timeout | redirect loop ...");
 
-                          if ( $result3['http_code'] != 200 )
-                              Message::set("error: no page | no permissions | no service ");
+                      if ( $result3['http_code'] != 200 )
+                          print_r("error: no page | no permissions | no service ");
 
-                          $page3 = $result3['content'];
-                          if($result3==TRUE){
-                              //create folder 
-                              $dir = null;
-                              if(!is_dir($dir .= "uploads/".$table."/".$subValue)){ 
-                                mkdir($dir, 0777, true);
-                                chmod($dir, 0777);
-                              }
-                              $dir2 = null;
-                              if(!is_dir($dir2 .= 'uploads/'.$table.'/'.$subValue.$subValue2)){  
-                                  mkdir($dir2, 0777, true);
-                                  chmod($dir2, 0777);
-                              }
-                              //create index file
-                              $myfile = fopen($dir2."index.txt", "w") or die("Unable to open file!");
+                      $page3 = $result3['content'];
+                      if($result3==TRUE){
+                          //create folder 
+                          $dir = '';
+                          if(!is_dir($dir .= "uploads/".$table."/".$subValue)){ 
+                            mkdir($dir, 0777, true);
+                            chmod($dir, 0777);
+                          }
+                          $dir2 = '';
+                          if(!is_dir($dir2 .= 'uploads/'.$table.'/'.$subValue.$subValue2)){  
+                              mkdir($dir2, 0777, true);
+                              chmod($dir2, 0777);
+                          }
+                          //create index file
+                          $myfile = fopen($dir2."index.txt", "w") or die("Unable to open file!");
 
-                              $str3 = $page3;
-                              $preg3=preg_match_all('#<li><a.*?>(.*?)<\/a></li>#', $str3, $parts3);
-                              if($preg3==TRUE){
-                                  //count summe of all files with array key
-                                  $countArray = count($parts3[1]);
-                                  for ($i = 1; $i < $countArray; $i++) {
-                                      //rename file. Before : "(1 space)filename"
-                                      $subValue3 = substr($parts3[1][$i], 1);
-                                      //upload files to storage
-                                      //url to files
-                                      $newurl3=$newurl2.$subValue3."";
-                                      $subName = substr($subValue3,0,-3);
-                                      //check if files already exist
-                                      if(!is_file(getcwd()."/".$dir2.$subName)){
-                                        //check if files had been already parsed
-                                        if(!is_file(getcwd()."/".$dir2.$subName.".done")){
-                                          //download remote files
-                                          $this->download_remote_file_with_curl($newurl3, getcwd()."/".$dir2.$subValue3);
-                                          //check if uploaded file extention is gz
-                                          if (substr(getcwd()."/".$dir2.$subValue3, -3) !== '.gz') {
-                                                //rename
-                                                $filenames = $subValue3;
-                                          }else{
-                                                //Convert files(gz) to bin directly after put them in uploads directory
-                                                $this->convert(getcwd()."/".$dir2.$subValue3);
-                                                //rename
-                                                $filenames = substr($subValue3, 0, -3);
-                                                //delete gz file
-                                                unlink(getcwd()."/".$dir2.$subValue3);
-                                          }
+                          $str3 = $page3;
+                          $preg3=preg_match_all('#<li><a.*?>(.*?)<\/a></li>#', $str3, $parts3);
+                          if($preg3==TRUE){
+                              //count summe of all files with array key
+                              $countArray = count($parts3[1]);
+                              for ($i = 1; $i < $countArray; $i++) {
+                                  //rename file. Before : "(1 space)filename"
+                                  $subValue3 = substr($parts3[1][$i], 1);
+                                  //upload files to storage
+                                  //url to files
+                                  $newurl3=$newurl2.$subValue3."";
+                                  $subName = substr($subValue3,0,-3);
+                                  //check if files already exist
+                                  if(!is_file(getcwd()."/".$dir2.$subName)){
+                                    //check if files had been already parsed
+                                    if(!is_file(getcwd()."/".$dir2.$subName.".done")){
+                                      //download remote files
+                                      $this->download_remote_file_with_curl($newurl3, getcwd()."/".$dir2.$subValue3);
+                                      //check if uploaded file extention is gz
+                                      if (substr(getcwd()."/".$dir2.$subValue3, -3) !== '.gz') {
+                                            //rename
+                                            $filenames = $subValue3;
                                       }else{
-                                        $filenames = substr($subValue3, 0, -3);
-                                      } 
-                                      //overwrite index.txt
-                                      $txt = $filenames."\n";
-                                      fwrite($myfile, $txt);
-                                    }
-                                  }
-                                  //Parse files into Database
-                                  $parse='parse_'.$table;
-                                  $this->$parse($dir2);
-                              } // end of 'if($preg3==TRUE)'
-                          } // enc of 'if($result3==TRUE)'
-                      } // end of 'if($preg2==TRUE)'
-                  } // end of 'if($result2==TRUE)'
-              } // end of 'if($preg==TRUE)'
-          } // end of 'if($result==TRUE)'
-      } // end of function
+                                            //Convert files(gz) to bin directly after put them in uploads directory
+                                            $this->convert(getcwd()."/".$dir2.$subValue3);
+                                            //rename
+                                            $filenames = substr($subValue3, 0, -3);
+                                            //delete gz file
+                                            unlink(getcwd()."/".$dir2.$subValue3);
+                                      }
+                                  }else{
+                                    $filenames = substr($subValue3, 0, -3);
+                                  } 
+                                  //overwrite index.txt
+                                  $txt = $filenames."\n";
+                                  fwrite($myfile, $txt);
+                                }
+                              }
+                              //Parse files into Database
+                              $parse='parse_'.$table;
+                              $this->$parse($dir2);
+                          } // end of 'if($preg3==TRUE)'
+                      } // enc of 'if($result3==TRUE)'
+                  } // end of 'if($preg2==TRUE)'
+              } // end of 'if($result2==TRUE)'
+          } // end of 'if($preg==TRUE)'
+      } // end of 'if($result==TRUE)'
+  }
+  public function pars_cf($dir3){
+    echo $dir3;
+  }
 
-      public function parse_cf($dir2) 
+  public function parse_cf($dir2) 
       {
           ini_set('max_execution_time', 0); 
           @set_time_limit(0);
@@ -473,7 +442,7 @@ class File extends CI_Controller {
                 $datas['UserAgent'] =$tmpObject[40];
                 $datas['in_bin'] = $file;
                 //insert to database
-                $this->File_model->insert_cf($datas);
+                $this->Connect_model->insert_cf($datas);
             }; //end of while ($contents = fread($handle, $rowSize))
              
              //rename bin folder in path uploads/ 
@@ -632,7 +601,7 @@ class File extends CI_Controller {
                           $datas['CountTypeId'] =$tmpObject[37];
                           $datas['ConnectionTypeId'] =$tmpObject[38];
                           $datas['in_bin'] = $file;
-                          $this->File_model->insert_ga($datas);
+                          $this->Connect_model->insert_ga($datas);
               };//end of while ($contents = fread($handle, $rowSize)) 
               //rename bin folder in path uploads/ 
               @fclose($handle);
@@ -795,7 +764,7 @@ class File extends CI_Controller {
                         $datas['CountTypeId'] =$tmpObject[37];
                         $datas['ConnectionTypeId'] =$tmpObject[38];
                         $datas['in_bin'] = $file;
-                        $this->File_model->insert_gl($datas);
+                        $this->Connect_model->insert_gl($datas);
                 };
                 //rename bin folder in path uploads/ 
                 @fclose($handle);
@@ -923,7 +892,7 @@ class File extends CI_Controller {
                         $datas['Url'] =$tmpObject[17];
                         $datas['Referer'] =$tmpObject[18];
                         $datas['in_bin'] = $file;
-                        $this->File_model->insert_ir($datas);
+                        $this->Connect_model->insert_ir($datas);
                      };
                 //rename bin folder in path uploads/ 
                 @fclose($handle);
@@ -1090,7 +1059,7 @@ class File extends CI_Controller {
                         $datas['PhraseId'] =$tmpObject[11];
                         $datas['NoKeywordEntries'] =$tmpObject[12];                      
                         $datas['in_bin'] = $file;
-                        $this->File_model->insert_kv($datas);
+                        $this->Connect_model->insert_kv($datas);
                      };
                 //rename bin folder in path uploads/ 
                 @fclose($handle);
@@ -1227,7 +1196,7 @@ class File extends CI_Controller {
                         $datas['KeywordText'] =$tmpObject[13];
                         $datas['KeywordTextLength'] =$tmpObject[14];  
                         $datas['in_bin'] = $file;                    
-                        $this->File_model->insert_kw($datas);
+                        $this->Connect_model->insert_kw($datas);
                      }; 
                 //rename bin folder in path uploads/ 
                 @fclose($handle);
@@ -1384,7 +1353,7 @@ class File extends CI_Controller {
                         $datas['CountTypeId'] =$tmpObject[37];
                         $datas['ConnectionTypeId'] =$tmpObject[38];
                         $datas['in_bin'] = $file;
-                        $this->File_model->insert_tc($datas);
+                        $this->Connect_model->insert_tc($datas);
                      };
                 //rename bin folder in path uploads/ 
                 @fclose($handle);
@@ -1394,6 +1363,4 @@ class File extends CI_Controller {
              $debugTimeEnd = microtime(true); 
         } 
     } // end of function
-
-}
-?>
+} // end of class
