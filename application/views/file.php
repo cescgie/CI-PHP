@@ -79,8 +79,8 @@
   }
   ?>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-   <script type="text/javascript">
-      var i = 0;
+  <script type="text/javascript">
+     var i = 0;
      var timeOutId = 0;
      var ajaxfn = function() {
         $.ajax({ url: '/CI-PHP/connect/',

@@ -23,7 +23,7 @@ class Connect extends CI_Controller {
       *and parse them into to database.
       */
       $this->all_connection();
-      //$this->connects('ga');
+
       /*
       *Query for intialize records in database.
       */
@@ -41,7 +41,6 @@ class Connect extends CI_Controller {
       $data['sum_kw'] = $this->Connect_model->count_kw();
       $data['sum_tc'] = $this->Connect_model->count_tc();
 
-      //print_r($data['sum_cf']['0']->sum_cf);
       $cf = $data['sum_cf']['0']->sum_cf;
       $ga = $data['sum_ga']['0']->sum_ga;
       $gl = $data['sum_gl']['0']->sum_gl;
@@ -51,7 +50,6 @@ class Connect extends CI_Controller {
       $tc = $data['sum_tc']['0']->sum_tc;
       
       echo $cf.'-'.$ga.'-'.$gl.'-'.$ir.'-'.$kv.'-'.$kw.'-'.$tc;
-      //echo 'ok';
    }
 
    public function all_connection(){
@@ -64,7 +62,7 @@ class Connect extends CI_Controller {
       $this->connects('kv');
       $this->connects('kw');
       $this->connects('tc');
-      //$this->connects('ga');
+      $this->connects('ga');
    }
 
    public function get_web_page( $url )
