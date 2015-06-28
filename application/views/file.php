@@ -79,6 +79,7 @@
   }
   ?>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <!--
   <script type="text/javascript">
      var i = 0;
      var timeOutId = 0;
@@ -105,6 +106,27 @@
       ajaxfn(); // seconds
       timeOutId = setTimeout(ajaxfn, 5000);
       //location.reload();
+    </script>-->
+    <script type="text/javascript">
+      var i = 0;
+      setInterval(function() {
+        $.ajax({ url: '/CI-PHP/connect/',
+           type: 'get',
+           success: function(output) {
+              var table = output.split("-");
+              $(".cf").html("<span style='color: #ff0000'> " +table[0]+" </span>");
+              $(".ga").html("<span style='color: #ff0000'> " +table[1]+" </span>");
+              $(".gl").html("<span style='color: #ff0000'> " +table[2]+" </span>");
+              $(".ir").html("<span style='color: #ff0000'> " +table[3]+" </span>");
+              $(".kv").html("<span style='color: #ff0000'> " +table[4]+" </span>");
+              $(".kw").html("<span style='color: #ff0000'> " +table[5]+" </span>");
+              $(".tc").html("<span style='color: #ff0000'> " +table[6]+" </span>");
+
+              console.log(output);
+              console.log("done"+i++);
+             }
+          });
+      }, 10000); //10 seconds
     </script>
   </body>
 </html>
